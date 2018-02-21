@@ -63,7 +63,7 @@ def raffle_ev(scores):
     evs = [round(AWARD*float(t)/tickets_total, 2) for t in tickets]
     return dict(zip(players, evs))
 
-def simulate(B_pred):
+def simulate(B_pred, payoff_func):
     scores = {
         A:0,
         B:0,
@@ -81,9 +81,9 @@ def simulate(B_pred):
 
     ev_dollars = collections.defaultdict(float)
     for p, scores in zip([ACTUAL, 1-ACTUAL], [yes_scores, no_scores]):
-        raffle_evs = raffle_ev(scores)
+        payoff_evs = payoff_func(scores)
         for player in PLAYERS:
-            ev_dollars[player] += p*raffle_evs[player]
+            ev_dollars[player] += p*payoff_evs[player]
     return ev_dollars[B]
 
 def load_tests(loader, tests, ignore):
@@ -92,7 +92,7 @@ def load_tests(loader, tests, ignore):
 
 if __name__ == '__main__':
     preds = [pred/100. for pred in range(1,100,5)]
-    results = [(pred,simulate(pred))
+    results = [(pred,simulate(pred, raffle_ev))
                for pred in preds]
     mx = max(r for _,r in results)
     for pred,res in results:
