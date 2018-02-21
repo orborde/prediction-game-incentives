@@ -63,6 +63,9 @@ def raffle_ev(scores):
     evs = [round(AWARD*float(t)/tickets_total, 2) for t in tickets]
     return dict(zip(players, evs))
 
+def points_ev(scores):
+    return scores
+
 def simulate(B_pred, payoff_func):
     scores = {
         A:0,
