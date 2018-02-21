@@ -91,6 +91,13 @@ def load_tests(loader, tests, ignore):
     return tests
 
 if __name__ == '__main__':
-    for pred in range(1, 100):
-        pred = pred/100.
-        print(pred, round(simulate(pred),2))
+    preds = [pred/100. for pred in range(1,100,5)]
+    results = [(pred,simulate(pred))
+               for pred in preds]
+    mx = max(r for _,r in results)
+    for pred,res in results:
+        print(pred, round(res,2), end='')
+        if res == mx:
+            print(' <-- max')
+        else:
+            print()
