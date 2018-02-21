@@ -94,13 +94,24 @@ def load_tests(loader, tests, ignore):
     return tests
 
 if __name__ == '__main__':
-    preds = [pred/100. for pred in range(1,100,5)]
-    results = [(pred,simulate(pred, raffle_ev))
-               for pred in preds]
-    mx = max(r for _,r in results)
-    for pred,res in results:
-        print(pred, round(res,2), end='')
-        if res == mx:
-            print(' <-- max')
+    preds = [pred/100. for pred in range(1,100,1)]
+    funcs = [points_ev, raffle_ev]
+    results = [[simulate(pred, func)
+                for pred in preds]
+               for func in funcs]
+    maxs = [max(seq) for seq in results]
+    for row in range(len(preds)):
+        pred = preds[row]
+        print(pred, end='')
+
+        maxfuncs = []
+        for col in range(len(funcs)):
+            if maxs[col] == results[col][row]:
+                maxfuncs.append(funcs[col].__name__)
+
+            print(' ', round(results[col][row], 2), end='')
+
+        if len(maxfuncs) > 0:
+            print(' <-- max', ' '.join(maxfuncs))
         else:
             print()
